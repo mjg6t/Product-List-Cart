@@ -117,11 +117,19 @@ function listDesserts(dessert){
     })
 
     img.addEventListener("click",()=>{
-        img.classList.remove('on-selected-or-hover')
-        button.classList.remove('button-hover')
+        img.classList.toggle('on-selected-or-hover')
+        button.classList.toggle('button-hover')
         button.textContent=''
-        button.appendChild(icon)
-        button.appendChild(document.createTextNode('add to cart'))
+        
+        if(img.classList.contains('on-selected-or-hover') && button.classList.contains('button-hover')){
+            button.appendChild(subDiv)
+            button.appendChild(document.createTextNode(`${returnQuantity(dessert.name)}`))
+            button.appendChild(addDiv)
+        } else{
+            button.appendChild(icon)
+            button.appendChild(document.createTextNode('add to cart'))
+        }
+        
         resetQuantity(dessert.name)
         totalItems = sumShoppingCart(shoppingCart)
         cartSize.innerText=`(${totalItems})`
