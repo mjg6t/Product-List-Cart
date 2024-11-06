@@ -122,7 +122,6 @@ body{
     flex-direction: column;
     margin: 0;
     gap: 2px;
-    position: relative;
 }
 
 p {
@@ -142,35 +141,70 @@ p {
 }
 
 #image{
+    display: block;
     border-radius: 10px;
+    border: 5px solid transparent;
     align-self:center;
     width: 100%;
     min-width: 20%;
     min-height: 20%;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
     height: auto;
+    transition: border 0.1s ease-out;
     
 }
 
+/* @media (max-width:400px) {
+    #image{
+        margin-bottom: 10px;
+    }
+} */
+
 #button{
-    border-radius: 20px;
-    padding: 0.9em;
+    border-radius: 120px;
+    padding: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
     width: fit-content;
-    position: absolute;
-    top: 45%;
+    white-space: normal;
+    /* position: absolute;
     left: 20%;
+    bottom: 5%; */
+    /* transform: translate(25%,-55%); */
+    align-self: center;
+    transform: translateY(-65%);
     background-color: #ffffff;
     border: 1px solid rgb(44, 35, 35);
     color: brown;
     font-size: 16px;
-    font-weight: 400;
+    font-weight: bolder;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
     z-index: 1;
+    transition: background-color 0.1s ease-out, color 0.1s ease-out, border 0.1s ease-out, width 0.9s cubic-bezier(0.25, 0.8, 0.25, 1)
 
     
+}
+
+#button:hover{
+    cursor: pointer;
+}
+
+.button-hover{
+    cursor: pointer;
+    background-color: brown !important;
+    color: #ffffff !important;
+    border: 1px solid brown !important;
+    width: 90% !important;
+    justify-content: space-between !important;
+    transition: background-color 0.1s ease-in, color 0.1s ease-in, border 0.1s ease-in, width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)
+}
+
+.on-selected-or-hover{
+    border: 5px solid brown !important;
+    transition: border 0.1s ease-in;
 }
 
 @media (max-width:400px) {
@@ -182,8 +216,9 @@ p {
         padding-bottom: 10px;
     }
     #button{
-        position: absolute;
+        /* position: absolute;
         top: 60%;
-        left: 30%;
+        left: 30%; */
+        transform: translateY(-65%)
     }
 }
