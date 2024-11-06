@@ -3,7 +3,6 @@ let cartSizeValue = cartSize.innerHTML.trim()
 cartSizeValue = cartSizeValue.replace(/[\(\)]/g, '')
 const cart = document.getElementById("inside-cart")
 const dessertList = document.getElementById("list-items")
-console.log(dessertList)
 
  let shoppingCart = []
  let totalItems = sumShoppingCart(shoppingCart)
@@ -23,7 +22,6 @@ if (totalItems == 0) {
 
     newDiv.classList.add('empty-cart')
     cart.appendChild(newDiv)
-    console.log('it works');
 }
 
 function listDesserts(dessert){
@@ -75,35 +73,56 @@ function listDesserts(dessert){
 
     item.classList.add('item')
 
+    const addDiv = document.createElement('div')
+
     const addicon = document.createElement('img')
     addicon.src = 'assets/images/icon-increment-quantity.svg'
     addicon.width = 10
     addicon.height = 10
+
+    addDiv.appendChild(addicon)
+    addDiv.classList.add('rounded')
+
+    const subDiv = document.createElement('div')
 
     const subicon = document.createElement('img')
     subicon.src = 'assets/images/icon-decrement-quantity.svg'
     subicon.width = 10
     subicon.height = 10
 
+    subDiv.appendChild(subicon)
+    subDiv.classList.add('rounded')
+
 
     button.addEventListener("click",()=>{
         img.classList.add('on-selected-or-hover')
         button.classList.add('button-hover')
         button.textContent = ''
-        button.appendChild(subicon)
+        button.appendChild(subDiv)
         button.appendChild(document.createTextNode(`${returnQuantity(dessert.name)}`))
-        button.appendChild(addicon)
+        button.appendChild(addDiv)
 
     })
 
-    addicon.addEventListener("click",()=>{
+    addDiv.addEventListener("click",()=>{
         addQuantity(dessert.name)
         totalItems = sumShoppingCart(shoppingCart)
         cartSize.innerText=`(${totalItems})`
     })
 
-    subicon.addEventListener("click",()=>{
+    subDiv.addEventListener("click",()=>{
         subQuantity(dessert.name)
+        totalItems = sumShoppingCart(shoppingCart)
+        cartSize.innerText=`(${totalItems})`
+    })
+
+    img.addEventListener("click",()=>{
+        img.classList.remove('on-selected-or-hover')
+        button.classList.remove('button-hover')
+        button.textContent=''
+        button.appendChild(icon)
+        button.appendChild(document.createTextNode('add to cart'))
+        resetQuantity(dessert.name)
         totalItems = sumShoppingCart(shoppingCart)
         cartSize.innerText=`(${totalItems})`
     })
@@ -158,6 +177,15 @@ function subQuantity(name){
     }
     
     item.quantity = item.quantity-1
+    return item.quantity
+}
+
+function resetQuantity(name){
+    let item = shoppingCart.find((item)=>{
+        return item.item == name
+    })
+    
+    item.quantity = 0
     return item.quantity
 }
 

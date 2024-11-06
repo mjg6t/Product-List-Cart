@@ -7,6 +7,11 @@ body{
         padding: 0;
         margin: 0;
     }
+
+    body{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
 }
 
 .overlay{
@@ -85,6 +90,7 @@ body{
     }
     .empty-cart{
         padding-left: 10px;
+        padding-right: 10px;
         padding-bottom: 30px;
     }
 }
@@ -143,7 +149,7 @@ p {
 #image{
     display: block;
     border-radius: 10px;
-    border: 5px solid transparent;
+    border: 3px solid transparent;
     align-self:center;
     width: 100%;
     min-width: 20%;
@@ -156,7 +162,8 @@ p {
 
 /* @media (max-width:400px) {
     #image{
-        margin-bottom: 10px;
+        width: 84vw;
+        height: 50vw;
     }
 } */
 
@@ -197,13 +204,13 @@ p {
     background-color: brown !important;
     color: #ffffff !important;
     border: 1px solid brown !important;
-    width: 90% !important;
-    justify-content: space-between !important;
+    width: 70% !important;
+    justify-content: space-around !important;
     transition: background-color 0.1s ease-in, color 0.1s ease-in, border 0.1s ease-in, width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)
 }
 
 .on-selected-or-hover{
-    border: 5px solid brown !important;
+    border: 3px solid brown !important;
     transition: border 0.1s ease-in;
 }
 
@@ -221,4 +228,13 @@ p {
         left: 30%; */
         transform: translateY(-65%)
     }
+}
+
+.rounded{
+    border-radius: 50% 50%;
+    border: 1px solid #ffffff;
+    padding: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
