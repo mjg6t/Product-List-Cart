@@ -15,6 +15,13 @@ function emptyCart(){
 
     if (cartEmpty==true && hasEmptyCartRunBefore == false){
 
+        const cartDiv = document.querySelectorAll('.cart-outer-div')
+        if(cartDiv){
+            cartDiv.forEach((item)=>{
+                cart.removeChild(item)
+            })
+        }
+
         let newDiv = document.createElement('div');
         newDiv.id = 'newDiv'
 
@@ -36,48 +43,82 @@ function emptyCart(){
     
 }
 
-function addCart(){
+function addCartItem(name){
 
     const emptyCart = document.querySelector('#newDiv');
     if (emptyCart){
         cart.removeChild(emptyCart)
     }
+
+    const selected = shoppingCart.find((item)=>{
+        if (item.item == name){
+            //console.log('returned item from sC',item)
+            return item;
+        }
+    })
+
     
-    /* code to add initial view of cart */
+
+    if (selected.listed == false){
+        const outerDiv = document.createElement('div')
+        outerDiv.id = `${selected.item} outer`
+        outerDiv.classList.add('cart-outer-div')
+        const innerDiv = document.createElement('div')
+        innerDiv.id = `${selected.item}`
+        //console.log('id', innerDiv.id)
+        outerDiv.appendChild(innerDiv)
+        innerDiv.innerText = `${selected.item}\n${selected.quantity}x @$${selected.unitPrice}  $${selected.price}`
+        selected.listed = true
+        cart.appendChild(outerDiv)
+    } else{
+        const iDiv = document.getElementById(`${selected.item}`)
+        if(selected.quantity != 0 && iDiv != null){
+            //console.log('retrieved id',iDiv.id)
+            if(iDiv){
+                iDiv.innerText = `${selected.item}\n${selected.quantity}x @$${selected.unitPrice}  $${selected.price}`
+            }
+        }else{
+            const parent = iDiv.parentElement;
+            //console.log('parent el', parent)
+            if(parent){
+                parent.removeChild(iDiv);
+            }
+
+        }
+        
+    } 
     
 }
 
+function removeCartItem(name){
+    const selected = shoppingCart.find((item)=>{
+        if (item.item == name){
+            return item
+        }
+    })
 
+    if (selected.quantity > 0){
+        addCartItem(selected.item)
+    }
 
-function listCart(cartItem){
-    if (cartItem.listed == true){
-        updateItem(cartItem)
-    }else{
-        listItem(cartItem)
+    if (selected.quantity == 0){
+        selected.listed = false
+        try{
+            const child = document.getElementById(`${selected.item}`)
+            const parent = child.parentNode
+            parent.removeChild(child)
+            const outerDiv = document.getElementById(`${selected.item} outer`)
+            if(outerDiv){
+            outerDiv.remove()
+            }
+        } catch{
+            console.log('empty cart')
+        }
+        
+        
     }
 }
 
-function listItem(cartItem){
-    const outerDiv = document.createElement('div')
-    outerDiv.id = `${cartItem.title}`
-    const title = document.createElement('p')
-    const detail = document.createElement('p')
-    const detailQuantity = document.createElement('span')
-    const detailUnitPrice = document.createElement('span')
-    const detailPrice = document.createElement('span')
-
-    detail.appendChild(detailQuantity)
-    detail.appendChild(detailUnitPrice)
-    detail.appendChild(detailPrice)
-
-    outerDiv.appendChild(title)
-    outerDiv.appendChild(detail)
-
-    outerDiv.classList.add('cart-entry')
-
-
-
-}
 
 function listDesserts(dessert){
     const item = document.createElement('div')
@@ -134,6 +175,7 @@ function listDesserts(dessert){
     addicon.src = 'assets/images/icon-increment-quantity.svg'
     addicon.width = 10
     addicon.height = 10
+    addicon.classList.add('plus-svg')
 
     addDiv.appendChild(addicon)
     addDiv.classList.add('rounded')
@@ -144,6 +186,7 @@ function listDesserts(dessert){
     subicon.src = 'assets/images/icon-decrement-quantity.svg'
     subicon.width = 10
     subicon.height = 10
+    subicon.classList.add('minus-svg')
 
     subDiv.appendChild(subicon)
     subDiv.classList.add('rounded')
@@ -166,7 +209,7 @@ function listDesserts(dessert){
         updatePrice(dessert.name)
         cartEmpty = false
         hasEmptyCartRunBefore = false
-        addCart()
+        addCartItem(dessert.name)
     })
 
     subDiv.addEventListener("click",()=>{
@@ -174,12 +217,14 @@ function listDesserts(dessert){
         totalItems = sumShoppingCart(shoppingCart)
         cartSize.innerText=`(${totalItems})`
         updatePrice(dessert.name)
+        removeCartItem(dessert.name)
         if (totalItems == 0){
             cartEmpty = true
             emptyCart()
-        }else{
-            addCart(dessert.name)
         }
+            
+        
+
     })
 
     img.addEventListener("click",()=>{
@@ -201,6 +246,7 @@ function listDesserts(dessert){
         }
         
         resetQuantity(dessert.name)
+        removeCartItem(dessert.name)
         totalItems = sumShoppingCart(shoppingCart)
         cartSize.innerText=`(${totalItems})`
 
@@ -296,4 +342,3 @@ function updatePrice(name){
     return item.price
 }
 
-console.log(shoppingCart)
