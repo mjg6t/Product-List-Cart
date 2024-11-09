@@ -15,12 +15,12 @@ function emptyCart(){
 
     if (cartEmpty==true && hasEmptyCartRunBefore == false){
 
-        const cartDiv = document.querySelectorAll('.cart-outer-div')
-        if(cartDiv){
-            cartDiv.forEach((item)=>{
-                cart.removeChild(item)
-            })
-        }
+        const cartChildren = cart.children
+        Array.from(cartChildren).forEach((child)=>{
+            if (child.id == 'not-empty-cart'){
+                cart.removeChild(child)
+            }
+        })
 
         let newDiv = document.createElement('div');
         newDiv.id = 'newDiv'
@@ -43,12 +43,78 @@ function emptyCart(){
     
 }
 
+function addCart(){
+    const newDiv = document.createElement('div')
+    newDiv.id = 'not-empty-cart'
+
+    let finalPrice = 0 
+    shoppingCart.map((item)=>{
+        finalPrice+=item.price
+        console.log('finalPrice',finalPrice)
+    })
+
+    const totalDiv = document.createElement('div')
+    totalDiv.id = 'totalDiv'
+    const totalTitle = document.createElement('p')
+    totalTitle.id = 'totalTitle'
+    const totalPrice = document.createElement('p')
+    totalPrice.id = 'totalPrice'
+    totalTitle.innerText = 'Order Total'
+    totalPrice.innerText = `$${parseFloat(finalPrice).toFixed(2)}`
+
+    newDiv.appendChild(totalDiv)
+    totalDiv.appendChild(totalTitle)
+    totalDiv.appendChild(totalPrice)
+
+
+    const cartMessage = document.createElement('div')
+    cartMessage.id = 'cartMessage'
+
+    const cMImage = document.createElement('img')
+    cMImage.src = 'assets/images/icon-carbon-neutral.svg'
+    cMImage.width = 25
+    cMImage.height = 25
+
+    cartMessage.appendChild(cMImage)
+
+    const boldSpan = document.createElement('span')
+    boldSpan.id = 'bold-text'
+    boldSpan.innerText = 'carbon-neutral'
+
+    const frag = document.createElement('span')
+    frag.appendChild(document.createTextNode('This is a '))
+    frag.appendChild(boldSpan)
+    frag.appendChild(document.createTextNode(' delivery'))
+
+    cartMessage.appendChild(frag)
+
+    newDiv.appendChild(cartMessage)
+
+
+    const notEmptyCart = document.getElementById('not-empty-cart')
+    if (!notEmptyCart){
+        cart.appendChild(newDiv)
+    }else{
+        const updateTotalPrice = document.getElementById('totalPrice')
+        updateTotalPrice.innerText = `$${parseFloat(finalPrice).toFixed(2)}`
+    }
+
+    
+
+    
+
+
+}
+
 function addCartItem(name){
 
     const emptyCart = document.querySelector('#newDiv');
     if (emptyCart){
         cart.removeChild(emptyCart)
+        
     }
+
+    addCart()
 
     const selected = shoppingCart.find((item)=>{
         if (item.item == name){
@@ -57,7 +123,7 @@ function addCartItem(name){
         }
     })
 
-    
+    const notEmptyCart = document.getElementById('not-empty-cart')
 
     if (selected.listed == false){
         const outerDiv = document.createElement('div')
@@ -69,7 +135,7 @@ function addCartItem(name){
         outerDiv.appendChild(innerDiv)
         innerDiv.innerText = `${selected.item}\n${selected.quantity}x @$${selected.unitPrice}  $${selected.price}`
         selected.listed = true
-        cart.appendChild(outerDiv)
+        notEmptyCart.insertBefore(outerDiv,document.getElementById('totalDiv'))
     } else{
         const iDiv = document.getElementById(`${selected.item}`)
         if(selected.quantity != 0 && iDiv != null){
@@ -86,8 +152,9 @@ function addCartItem(name){
 
         }
         
-    } 
+    }
     
+
 }
 
 function removeCartItem(name){
@@ -99,10 +166,12 @@ function removeCartItem(name){
 
     if (selected.quantity > 0){
         addCartItem(selected.item)
+        addCart()
     }
 
     if (selected.quantity == 0){
         selected.listed = false
+        selected.price = 0
         try{
             const child = document.getElementById(`${selected.item}`)
             const parent = child.parentNode
@@ -110,9 +179,10 @@ function removeCartItem(name){
             const outerDiv = document.getElementById(`${selected.item} outer`)
             if(outerDiv){
             outerDiv.remove()
+            addCart()
             }
         } catch{
-            console.log('empty cart')
+            console.log('selected/unselected')
         }
         
         
@@ -342,3 +412,11 @@ function updatePrice(name){
     return item.price
 }
 
+// function updateTotalPrice(name){
+//     let item = shoppingCart.find((item)=>{
+//         return item.item == name
+//     })
+    
+//     item.price = item.unitPrice * item.quantity
+//     return item.price
+// }
